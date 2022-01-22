@@ -32,10 +32,12 @@ let data = [
 ]
 
 app.get('/', cors(), (request, response) => {
+  console.log("Request at /")
   response.send('<h1>Hello World</h1>')
 })
 
 app.get('/api/data', cors(), (request, response) => {
+  console.log("Data requested")
   response.send(data)
 })
 
