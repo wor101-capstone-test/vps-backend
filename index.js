@@ -31,11 +31,11 @@ let data = [
   }
 ]
 
-app.get('/', (request, response) => {
+app.get('/', cors(), (request, response) => {
   response.send('<h1>Hello World</h1>')
 })
 
-app.get('/api/data', (request, response) => {
+app.get('/api/data', cors(), (request, response) => {
   response.send(data)
 })
 
