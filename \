@@ -1,0 +1,21 @@
+                                         Table "public.characters"
+      Column       |          Type          | Collation | Nullable |                Default                 
+-------------------+------------------------+-----------+----------+----------------------------------------
+ id                | integer                |           | not null | nextval('characters_id_seq'::regclass)
+ player_character  | boolean                |           |          | false
+ name              | character varying(150) |           | not null | 
+ picture_link      | text                   |           |          | 
+ stat_block_name   | character varying(150) |           |          | 
+ stat_block_link   | text                   |           |          | 
+ main_location     | integer                |           |          | 
+ alignment         | character varying(50)  |           |          | 
+ ancestory         | character varying(150) |           |          | 
+ gender            | character varying(150) |           |          | 
+ short_description | text                   |           |          | 
+Indexes:
+    "characters_pkey" PRIMARY KEY, btree (id)
+Check constraints:
+    "characters_alignment_check" CHECK (alignment::text = ANY (ARRAY['Lawful Good'::character varying, 'Lawful Neutral'::character varying, 'Lawful Evil'::character varying, 'Neutral Good'::character varying, 'True Neutral'::character varying, 'Neutral Evil'::character varying, 'Chaotic Good'::character varying, 'Chaotic Neutral'::character varying, 'Chaotic Evil'::character varying]::text[]))
+Referenced by:
+    TABLE "characters_interactions" CONSTRAINT "charcters_interactions_character_id_fkey" FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE
+

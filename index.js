@@ -1,8 +1,20 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
+const db = require('./db/index.js')
 
 app.use(cors())
+
+
+const { Pool } = require('pg')
+
+const pool = new Pool({
+  host: 'localhost',
+  user: 'wor101',
+  port: 5432,
+  password: "root",
+  database: "npc_tracker"
+})
 
 
 let data = [
@@ -33,8 +45,21 @@ let data = [
 
 
 app.get('/api/data', cors(), (request, response) => {
-  console.log("Data requested")
-  response.send(data)
+  pool
+    .connect()
+    .then(client => {
+      return client
+        .query('SELECT * FROM characters')
+        .then(res => {
+          client.release()
+          console.log(res.rows)
+          response.send(res.rows)
+        })
+        .catch(err => {
+          client.release()
+          console.log(err.stack)
+        })
+      })
 })
 
 const PORT = 3001
