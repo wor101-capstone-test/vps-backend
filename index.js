@@ -47,14 +47,8 @@ app.post('/api/data/snack', (request, response) => {
     console.log(res.command)
     console.log(res)
     console.log(snackName)
+    response.sendStatus(200)
   })  
-})
-
-
-
-const PORT = 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
 })
 
 app.delete('/api/data/snack/:id', (request, response) => {
@@ -69,3 +63,11 @@ app.delete('/api/data/snack/:id', (request, response) => {
     }
  })
 })
+
+
+
+const PORT = 3001
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})
+
