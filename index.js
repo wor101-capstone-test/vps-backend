@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express()
 const db = require('./db/index.js')
+const { MongoInsertOne, MongoDeleteOne } = require('./services/mongodb')
 
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -51,18 +52,46 @@ app.post('/api/data/snack', (request, response) => {
   })  
 })
 
+// app.delete('/api/data/snack/:id', (request, response) => {
+//   const snackId = request.params.id
+//   console.log(snackId)
+//   pool.query(`DELETE FROM characters WHERE id=${snackId}`, (err, res) => {
+//     if (err) {
+//       throw err
+//     } else {
+//       console.log(res.command)
+//       response.sendStatus(200)
+//     }
+//  })
+// })
+
 app.delete('/api/data/snack/:id', (request, response) => {
   const snackId = request.params.id
-  console.log(snackId)
-  pool.query(`DELETE FROM characters WHERE id=${snackId}`, (err, res) => {
-    if (err) {
-      throw err
-    } else {
-      console.log(res.command)
+  console.log("Delete RequestBody: ",request.body)
+  pool
+    .query(`DELETE FROM characters WHERE id=${snackId}`)
+    .then(res => {
+      console.log('DELETE from postgreSQL successful')
       response.sendStatus(200)
-    }
- })
+      try {
+        MongoInsertOne(request.body)
+      } catch(error) {
+        console.error(error)
+      }
+    })
+    .catch(err => console.error('Error executing delete to postgreSQL', err.stack))
 })
+
+app.delete('/api/data/bowels', (request, response) => {
+  console.log('Request to poop received!')
+  try {
+    MongoDeleteOne()
+    response.sendStatus(200)
+  } catch(error) {
+    console.error(error)
+  }
+})
+
 
 
 
