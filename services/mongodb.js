@@ -52,19 +52,18 @@ const MongoFindOne = (params = {}) => {
 }
 //MongoFindOne({name: "kobold"})
 
-const MongoFindAll = (query = {}) => {
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err
-    const dbo = db.db(dbname)
-    dbo.collection(collection).find(query).toArray(function(err, result) {
-      if (err) throw err
-      console.log(result)
-      db.close()
-      return result
-    })
-  })
+const MongoFindAll = async (query = {}) => {
+  let client
+  try {
+    client = await MongoClient.connect(url)
+    const db = client.db(dbname)
+    const col = db.collection(collection)
+    const docs = await col.find(query).toArray()
+    return docs
+  } catch (err) {
+    console.error(err)
+  }
 }
-//MongoFindAll({name: "adventurer"})
 
 const MongoFindSome = (query = {}, proj = {}) => {
   MongoClient.connect(url, function(err, db) {

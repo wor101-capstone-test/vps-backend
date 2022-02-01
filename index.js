@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express()
 const db = require('./db/index.js')
-const { MongoInsertOne, MongoDeleteOne } = require('./services/mongodb')
+const { MongoInsertOne, MongoDeleteOne, MongoFindAll } = require('./services/mongodb')
 
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -80,6 +80,27 @@ app.delete('/api/data/snack/:id', (request, response) => {
       }
     })
     .catch(err => console.error('Error executing delete to postgreSQL', err.stack))
+})
+
+
+
+app.get('/api/data/bowels', (request, response) => {
+  console.log('Stomach contents requested!')
+  //let contents = []
+  
+  async function getContents(response) {
+    const contents = await MongoFindAll()
+    console.log(contents)
+    response.send(contents)
+  } 
+  
+  getContents(response)
+  //console.log('Contents: ', contents)
+  // const getContents = async () = {
+  //   contents = await MongoFindAll()
+  // }
+  //getContents()
+  //response.send(contents)
 })
 
 app.delete('/api/data/bowels', (request, response) => {
